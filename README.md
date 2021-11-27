@@ -1,8 +1,7 @@
 # Message in A Bottle - users
-[![Build Status](https://app.travis-ci.com/Team6ASE2021/mmiab-user.svg?token=5PqFNKuWwdmknapJspK9&branch=main)](https://app.travis-ci.com/Team6ASE2021/mmiab-user)
+[![Build Status](https://app.travis-ci.com/Team6ASE2021/mmiab-lottery.svg?token=5PqFNKuWwdmknapJspK9&branch=main)](https://app.travis-ci.com/Team6ASE2021/mmiab-lottery)
 
-[![codecov](https://codecov.io/gh/Team6ASE2021/mmiab-user/branch/main/graph/badge.svg?token=K8QPGGVUY1)](https://codecov.io/gh/Team6ASE2021/mmiab-user)
-
+[![codecov](https://codecov.io/gh/Team6ASE2021/mmiab-lottery/branch/main/graph/badge.svg?token=A7E5UFS6S7)](https://codecov.io/gh/Team6ASE2021/mmiab-lottery)
 
 This is the source code of Message in a Bottle application, self project of *Advanced Software Engineering* course,
 University of Pisa.
