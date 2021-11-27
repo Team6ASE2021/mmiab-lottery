@@ -2,7 +2,7 @@ language: python
 python: 3.9
 env:
   global:
-    - CODECOV_TOKEN='81fb45b3-6269-43ce-9793-1fd91c4c88d5'
+    - CODECOV_TOKEN='68b4c3b6-ae9f-45aa-a430-d5fde523a073'
 
     - TOX_ENV=py39
 install:
