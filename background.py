@@ -68,7 +68,7 @@ def _lottery_draw():
     participants = LotteryManager.get_participant
     winners = list(
         map(
-            lambda u: u.participant.id,
+            lambda u: u.participant_id,
             filter(lambda u: u.choice == winner, participants),
         )
     )
@@ -76,7 +76,7 @@ def _lottery_draw():
     logger.log(logging.INFO, "Adding points to winners...")
     json = {
         [{
-            "id":w.participant_id,
+            "id":w,
             "points":1
         } for w in winners]
     }
