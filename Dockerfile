@@ -4,7 +4,7 @@
 FROM python:3.8
 LABEL maintainer="6_squad"
 LABEL version="1.0"
-LABEL description="Message in a Bottle User Microservice"
+LABEL description="Message in a Bottle Lottery Microservice"
 
 # setting the workdir
 WORKDIR /app

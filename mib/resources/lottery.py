@@ -2,6 +2,7 @@
 from flask.json import jsonify
 from mib.dao.lottery_manager import LotteryManager
 from flask import request
+from mib.models.lottery_participant import LotteryParticipant
 from mib.utils import next_lottery_date
 
 def get_next_lottery():
@@ -14,7 +15,7 @@ def get_next_lottery():
 
 def participate():
     data = request.json
-    l =  LotteryManager.add_participant(data["email"],data["choice"])
+    l =  LotteryManager.add_participant(data["id"],data["choice"])
     if l:
         return jsonify({
                 "status": "success",
@@ -25,3 +26,22 @@ def participate():
                 "status": "failure",
                 "message":"A participant with the given email already exists"
             }), 200
+
+def get_choice(participant_id: int):
+    p = LotteryManager.get_participant(participant_id)
+    if p is not None:
+        return jsonify({
+            "choice":p.choice
+        }),200
+    else:
+        return jsonify({
+            "status":"failed",
+            "message":"No user with the given participant id found"
+        }), 404
+
+def remove_participant(participant_id: int):
+    LotteryManager.remove_participant(participant_id)
+    return jsonify({
+    "status":"success",
+    "message": "Participant successfully deleted"    
+    }),200

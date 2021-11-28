@@ -1,7 +1,7 @@
 openapi: "3.0.1"
 info:
-  title: Users Service API
-  description: Users Microservice of Message in a Bottle Application
+  title: Lottery Service API
+  description: Lottery Microservice of Message in a Bottle Application
   version: "0.1"
 
 servers:
@@ -11,6 +11,8 @@ paths:
   /lottery:
     get:
       summary: get the next lottery date and the list of participants
+      tags:
+        - Lottery
       operationId: mib.resources.lottery.get_next_lottery
       responses:
         200:
@@ -27,7 +29,7 @@ paths:
         - Lottery
       operationId: mib.resources.lottery.participate
       requestBody:
-        description: creates a new LotteryParticipant with the given email and choice
+        description: id = user id of the new participant  choice = number chosen
         required: true
         content: 
           application/json:
@@ -40,19 +42,61 @@ paths:
           description: Invalid choice
         201:
           description: Lottery participation added        
-
-components:
+  
+  /lottery/{participant_id}:
+    get:
+      summary: returns the choice of a participant
+      tags:
+        - Lottery
+      parameters:
+        - in: path
+          name: participant_id
+          required: true
+          schema:
+            type: integer
+            format: int64
+            description: user id of the participant
+      operationId: mib.resources.lottery.get_choice
+      responses:
+        200:
+          description: Participant found and choice returned
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  choice:
+                    type: integer
+        404:
+          description: No participant found with the given participant_id
+    delete:
+      summary: removes a participant
+      tags:
+        - Lottery 
+      parameters:
+        - in: path
+          name: participant_id 
+          required: true
+          schema:
+            type: integer 
+            format: int64
+            description: user id of the participant to remove
+      operationId: mib.resources.lottery.remove_participant
+      responses:
+        200:
+          description: participant succesfully deleted
+components: 
   schemas:
     Participant:
       required:
-        - email
+        - id
         - choice
       type: object
       properties:
-        email:
-          type: string
-          description: email of participant
-          example: example@example.com
+        id:
+          type: integer
+          description: unique identifier of a participant, corresponds to the id in the User db
+          example: 2
         choice:
           type: integer
           minimum: 1
