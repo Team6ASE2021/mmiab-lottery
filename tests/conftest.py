@@ -24,9 +24,9 @@ def mock_ap():
 
 @pytest.fixture
 def participants():
-    p1 = LotteryParticipant(participant_email="email@email.com",choice=2)
-    p2 = LotteryParticipant(participant_email="email2@email2.com", choice = 15)
-    p3 = LotteryParticipant(participant_email="email3@email3.com", choice = 50)
+    p1 = LotteryParticipant(participant_id=1,choice=2)
+    p2 = LotteryParticipant(participant_id=2, choice = 15)
+    p3 = LotteryParticipant(participant_id=3, choice = 50)
     db.session.add_all([p1,p2,p3])
     db.session.commit()
     yield p1,p2,p3

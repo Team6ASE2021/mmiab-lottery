@@ -10,39 +10,35 @@ class LotteryManager(Manager):
         return list
 
     @staticmethod
-    def add_participant(email: str = None, choice: int=None):
-        if LotteryManager.is_participating(email=email):
+    def add_participant(id: int = None, choice: int=None):
+        if LotteryManager.is_participating(id=id):
             return False
         else:
-            Manager.check_none(email=email,choice=choice)
-            participant = LotteryParticipant(participant_email=email, choice=choice)
+            Manager.check_none(id=id,choice=choice)
+            participant = LotteryParticipant(participant_id=id, choice=choice)
             Manager.create(participant=participant)
+            return True
 
     @staticmethod
-    def is_participating(email: str) -> bool:
-        Manager.check_none(email=email)
-        return LotteryManager.get_participant(email=email) is not None
+    def is_participating(id: int) -> bool:
+        Manager.check_none(id=id)
+        return LotteryManager.get_participant(id=id) is not None
 
     @staticmethod
-    def get_participant(email: str) -> LotteryParticipant:
-        Manager.check_none(email=email)
+    def get_participant(id: int) -> LotteryParticipant:
+        Manager.check_none(id=id)
         participant = (
             db.session.query(LotteryParticipant)
-            .filter(LotteryParticipant.participant_email == email)
+            .filter(LotteryParticipant.participant_id == id)
             .first()
         )
         return participant
-    
-    @staticmethod
-    def change_choice(email: str, new_choice: int):
-        Manager.check_none(email=email, new_choice=new_choice)
-        p = LotteryManager.get_participant(email=email)
-        p.choice = new_choice
-        Manager.update()
 
-    def remove_participant(email: str):
-        p = LotteryManager.get_participant(email=email)
-        Manager.delete(p=p)
+    @staticmethod
+    def remove_participant(id: int):
+        p = LotteryManager.get_participant(id=id)
+        if p is not None:
+            Manager.delete(p=p)
 
     @staticmethod
     def reset_lottery() -> None:

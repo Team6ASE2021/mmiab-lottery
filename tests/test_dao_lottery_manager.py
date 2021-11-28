@@ -19,58 +19,49 @@ class TestLotteryManager:
             LotteryManager.add_participant()
     
     def test_add_participant(self):
-        LotteryManager.add_participant(email="email@email.com", choice=3)
+        assert LotteryManager.add_participant(id=1, choice=3)
         p = LotteryParticipant.query.get(1)
-        assert p.participant_email == "email@email.com"
+        assert p.participant_id == 1
         assert p.choice == 3
         db.session.delete(p)
         db.session.commit()
 
-    def test_add_participant_already_exists(self,participants):
-        assert not LotteryManager.add_participant(email="email@email.com", choice=3)
+    @pytest.mark.parametrize("id",[1,2,3])
+    def test_add_participant_already_exists(self,participants,id):
+        assert not LotteryManager.add_participant(id=id, choice=3)
     
-    @pytest.mark.parametrize("email, expected",[ 
-        ("fail@fail.com", False),
-        ("email@email.com", True)
+    @pytest.mark.parametrize("id, expected",[ 
+        (15, False),
+        (1, True)
     ])
-    def test_is_participating(self, participants, email, expected):
-        assert LotteryManager.is_participating(email=email) == expected
+    def test_is_participating(self, participants, id, expected):
+        assert LotteryManager.is_participating(id=id) == expected
     
 
     def test_get_participant_not_playing(self):
-        p = LotteryManager.get_participant(email="email@email.com")
+        p = LotteryManager.get_participant(id=13)
         assert p is None
-    @pytest.mark.parametrize("email, expected",[ 
-        ("email@email.com", 2),
-        ("email2@email2.com", 15),
-        ("email3@email3.com", 50)
+
+    @pytest.mark.parametrize("id, expected",[ 
+        (1, 2),
+        (2, 15),
+        (3, 50)
     ])
-    def test_get_participant(self, participants, email, expected):
-        p = LotteryManager.get_participant(email=email)
+    def test_get_participant(self, participants, id, expected):
+        p = LotteryManager.get_participant(id=id)
         assert p.choice == expected
     
-    @pytest.mark.parametrize("email,old, new",[ 
-        ("email@email.com", 2,13),
-        ("email2@email2.com", 15,12),
-        ("email3@email3.com", 50,1)
-    ])
-    def test_update_choice(self, participants, email, old, new):
-        p = LotteryManager.get_participant(email=email)
-        assert p.choice == old 
-        LotteryManager.change_choice(email=email, new_choice=new)
-        assert p.choice == new
-    
     def test_remove_participant(self):
-        p = LotteryParticipant(participant_email="email@email.com",choice=34)
+        p = LotteryParticipant(participant_id=1,choice=34)
         db.session.add(p)
         assert len(db.session.query(LotteryParticipant).all()) == 1
-        LotteryManager.remove_participant(email = p.participant_email)
+        LotteryManager.remove_participant(id=1)
         assert len(db.session.query(LotteryParticipant).all()) == 0
 
     def test_reset_lottery(self):
-        p1 = LotteryParticipant(participant_email="email@email.com",choice=2)
-        p2 = LotteryParticipant(participant_email="email2@email2.com", choice = 15)
-        p3 = LotteryParticipant(participant_email="email3@email3.com", choice = 50)
+        p1 = LotteryParticipant(participant_id=1,choice=2)
+        p2 = LotteryParticipant(participant_id=2, choice = 15)
+        p3 = LotteryParticipant(participant_id=3, choice = 50)
         db.session.add_all([p1,p2,p3])
         assert len(db.session.query(LotteryParticipant).all()) == 3
         LotteryManager.reset_lottery()
