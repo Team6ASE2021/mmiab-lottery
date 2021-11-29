@@ -12,8 +12,8 @@ _APP = None
 # BACKEND = "redis://localhost:6379"
 # BROKER = "redis://localhost:6379/0"
 BACKEND = "redis://rd01:6379"
-BROKER = "redis://rd01:6379/0"
-GATEWAY = "localhost:5000"
+BROKER = "redis://rd01:6379/0"  
+USERS = None
 celery = Celery(__name__, backend=BACKEND, broker=BROKER)
 
 TaskBase = celery.Task
@@ -27,6 +27,7 @@ class ContextTask(TaskBase):  # pragma: no cover
             from mib import create_app
 
             app = _APP = create_app()
+            USERS = _APP.config['USERS_MS_URL']
         else:
             app = _APP
         with app.app_context():
@@ -80,7 +81,7 @@ def _lottery_draw():
             "points":1
         } for w in winners]
     }
-    requests.post(f"{GATEWAY}/lottery_update", json=json)
+    requests.post(f"{USERS}/lottery_update", json=json)
 
     logger.log(logging.INFO, "Cleaning up lottery participants...")
 
