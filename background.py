@@ -65,7 +65,7 @@ def _lottery_draw():
     winner = random.randint(1, 50)
     logger.log(logging.INFO, f"Winning number: {winner}")
 
-    participants = LotteryManager.get_participant
+    participants = LotteryManager.get_participants()
     winners = list(
         map(
             lambda u: u.participant_id,
