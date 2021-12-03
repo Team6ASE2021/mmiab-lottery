@@ -38,10 +38,13 @@ services:
       depends_on:
         - celery
         - lottery
+        - db
+        - migrations
       build: .
       env_file:
         - env_file
       environment:
+        - POSTGRES_HOST=db
         - REDIS_HOST=redis
       command: python3 -u subscribers.py
       links:
@@ -50,8 +53,12 @@ services:
     depends_on:
         - redis-celery
         - mib-lottery
+        - db
+        - migrations
     build: .
     restart: always
+    environment:
+        - POSTGRES_HOST=db
     command: celery -A mib.background worker --loglevel=info
     links:
         -  redis-celery

@@ -12,7 +12,7 @@ from mib import create_app
 class EventSubscribers: # pragma: no cover
 
     @classmethod
-    def participant_deleter(cls,app):
+    def participant_deleter(cls, app):
         redis_c = get_redis(app)
         p = redis_c.pubsub()
         p.subscribe(SUBSCRIBE_CHANNEL_USER_DELETE)
@@ -30,9 +30,6 @@ event_subscribers = [
 def init_subscribers(): # pragma: no cover
     app = create_app()
     logging.info("setting up subscribers...")
-    with ThreadPoolExecutor(max_workers=8) as ex:
-        for sub in event_subscribers:
-            f = ex.submit(sub.get("subscriber"), app)
-        f.result()
+    EventSubscribers.participant_deleter(app)
 if __name__ == "__main__":# pragma: no cover
     raise SystemExit(init_subscribers())
