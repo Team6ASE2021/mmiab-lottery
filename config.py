@@ -1,6 +1,5 @@
 import os
 
-from background import USER_MS_PORT
 class Config(object):
     DEBUG = False
     TESTING = False
@@ -8,6 +7,9 @@ class Config(object):
     USERS_MS_HOST = os.getenv('USERS_MS_HOST', 'localhost')
     USERS_MS_PORT = os.getenv('USERS_MS_PORT', 5000)
     USERS_MS_URL = F"{USERS_MS_PROTO}://{USERS_MS_HOST}:{USERS_MS_PORT}"
+    REDIS_HOST=os.getenv("REDIS_HOST","localhost")
+    REDIS_PORT=os.getenv("REDIS_PORT",6379)
+    REDIS_DB=os.getenv("REDIS_DB",0)
 
 class DebugConfig(Config):
     """

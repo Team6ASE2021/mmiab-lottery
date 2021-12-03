@@ -1,19 +1,18 @@
 import os
 import logging
 import random
-import requests
 from celery import Celery
 from celery.schedules import crontab
 from celery.utils.log import get_task_logger
 from mib.dao.lottery_manager import LotteryManager
+from mib.events.publishers import EventPublishers
 
 _APP = None
 
 # BACKEND = "redis://localhost:6379"
 # BROKER = "redis://localhost:6379/0"
-BACKEND = "redis://rd01:6379"
-BROKER = "redis://rd01:6379/0"  
-USERS = None
+BACKEND = "redis://rd02:6380"
+BROKER = "redis://rd02:6380/0"  
 celery = Celery(__name__, backend=BACKEND, broker=BROKER)
 
 TaskBase = celery.Task
@@ -35,7 +34,7 @@ class ContextTask(TaskBase):  # pragma: no cover
 
 
 celery.Task = ContextTask
-
+celery.conf.timezone = "Europe/Rome"
 celery.conf.beat_schedule = {
     "lottery_draw": {
         "task": __name__ + ".lottery_draw",
@@ -75,15 +74,15 @@ def _lottery_draw():
     )
 
     logger.log(logging.INFO, "Adding points to winners...")
-    json = {
+    json = {"users":
         [{
             "id":w,
             "points":1
         } for w in winners]
     }
-    requests.post(f"{USERS}/lottery_update", json=json)
-
+    EventPublishers.publish_lottery_winners(json)
     logger.log(logging.INFO, "Cleaning up lottery participants...")
 
     LotteryManager.reset_lottery()
     logger.log(logging.INFO, "Table reset done, waiting for next lottery")
+    return json

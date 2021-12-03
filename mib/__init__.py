@@ -6,6 +6,7 @@ import os
 __version__ = '0.1'
 
 import connexion
+from mib.events.redis_setup import get_redis
 from flask_environments import Environments
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
@@ -29,6 +30,7 @@ def create_app():
     global app
     global migrate
     global api_app
+    global redis_client
 
     # first initialize the logger
     init_logger()
@@ -76,6 +78,8 @@ def create_app():
 
     # registering to api app all specifications
     register_specifications(api_app)
+    init_logger()
+    redis_client = get_redis(app)
 
     return app
 

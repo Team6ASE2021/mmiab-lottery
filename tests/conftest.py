@@ -1,7 +1,9 @@
 import pytest
 from mib import create_app, db
 import mock
+from flask import current_app
 from mib.models import LotteryParticipant
+from mib.events.redis_setup import get_redis
 
 @pytest.fixture(scope="session", autouse=True)
 def test_client():
@@ -21,6 +23,8 @@ def mock_gp():
 def mock_ap():
     with mock.patch("mib.dao.lottery_manager.LotteryManager.add_participant") as m:
         yield m
+
+
 
 @pytest.fixture
 def participants():
