@@ -33,19 +33,47 @@ services:
     depends_on:
       - db
       - migrations
+  
+  lottery-bg:
+      depends_on:
+        - celery
+        - lottery
+        - db
+        - migrations
+      build: .
+      env_file:
+        - env_file
+      environment:
+        - POSTGRES_HOST=db
+        - REDIS_HOST=redis
+      command: python3 -u subscribers.py
+      links:
+        - redis
   celery:
-        depends_on:
-            - redis
-            - mib-lottery
-        build: .
-        restart: always
-        command: celery -A background worker --loglevel=info
-        links:
-            -  redis
+    depends_on:
+        - redis-celery
+        - mib-lottery
+        - db
+        - migrations
+    build: .
+    restart: always
+    environment:
+        - POSTGRES_HOST=db
+    command: celery -A mib.background worker --loglevel=info
+    links:
+        -  redis-celery
   redis:
       image: "redis:alpine"
       container_name: rd01
       command: --port 6379
+      ports:
+        - "6379:6379"
+  redis-celery:
+      image: "redis:alpine"
+      container_name: rd02
+      command: --port 6380
+      ports:
+        - "6380:6380"
   migrations:
     #
     # this service is used to apply migrations on db
