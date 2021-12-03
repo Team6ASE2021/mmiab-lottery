@@ -1,1 +1,0 @@
-from .lottery_participant import LotteryParticipant

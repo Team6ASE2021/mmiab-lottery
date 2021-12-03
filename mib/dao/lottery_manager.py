@@ -1,20 +1,20 @@
+from mib import db
 from mib.dao.manager import Manager
-from mib.utils import LOTTERY_CONSTRAINTS
-from mib import db 
 from mib.models import LotteryParticipant
+
+
 class LotteryManager(Manager):
-    
     @staticmethod
     def get_participants():
         list = db.session.query(LotteryParticipant).all()
         return list
 
     @staticmethod
-    def add_participant(id: int = None, choice: int=None):
+    def add_participant(id: int = None, choice: int = None):
         if LotteryManager.is_participating(id=id):
             return False
         else:
-            Manager.check_none(id=id,choice=choice)
+            Manager.check_none(id=id, choice=choice)
             participant = LotteryParticipant(participant_id=id, choice=choice)
             Manager.create(participant=participant)
             return True

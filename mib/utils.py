@@ -1,4 +1,3 @@
-
 from calendar import monthrange
 from datetime import date
 from datetime import timedelta
@@ -10,7 +9,5 @@ def next_lottery_date():
     first_day = today.replace(day=1) + timedelta(days_in_month(today))
     return first_day
 
-LOTTERY_CONSTRAINTS = {
-    "min_choice":1,
-    "max_choice":50
-}
+
+LOTTERY_CONSTRAINTS = {"min_choice": 1, "max_choice": 50}
