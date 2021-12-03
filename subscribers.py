@@ -18,7 +18,8 @@ class EventSubscribers: # pragma: no cover
         p.subscribe(SUBSCRIBE_CHANNEL_USER_DELETE)
         logging.info(f"subscribed on channel {SUBSCRIBE_CHANNEL_USER_DELETE}")
         for message in p.listen():
-           delete_participant(message)
+            with app.app_context():
+                delete_participant(message)
     
 
 
@@ -30,6 +31,8 @@ event_subscribers = [
 def init_subscribers(): # pragma: no cover
     app = create_app()
     logging.info("setting up subscribers...")
-    EventSubscribers.participant_deleter(app)
+    with ThreadPoolExecutor(max_workers=8) as ex:
+        f = ex.submit(EventSubscribers.participant_deleter, app)
+    f.result()
 if __name__ == "__main__":# pragma: no cover
     raise SystemExit(init_subscribers())
