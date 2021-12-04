@@ -1,5 +1,6 @@
 import logging
 from concurrent.futures import ThreadPoolExecutor
+from concurrent.futures import wait
 
 from mib import create_app
 from mib.events.callbacks import delete_participant
@@ -13,7 +14,7 @@ class EventSubscribers:  # pragma: no cover
         redis_c = get_redis(app)
         p = redis_c.pubsub()
         p.subscribe(SUBSCRIBE_CHANNEL_USER_DELETE)
-        logging.info(f"subscribed on channel {SUBSCRIBE_CHANNEL_USER_DELETE}")
+        logging.debug(f"subscribed on channel {SUBSCRIBE_CHANNEL_USER_DELETE}")
         for message in p.listen():
             with app.app_context():
                 delete_participant(message)
@@ -26,8 +27,8 @@ def init_subscribers():  # pragma: no cover
     app = create_app()
     logging.info("setting up subscribers...")
     with ThreadPoolExecutor(max_workers=8) as ex:
-        f = ex.submit(EventSubscribers.participant_deleter, app)
-    f.result()
+        futures = [ex.submit(sub["subscriber"], app) for sub in event_subscribers]
+    wait(futures)
 
 
 if __name__ == "__main__":  # pragma: no cover
