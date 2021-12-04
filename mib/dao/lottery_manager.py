@@ -1,6 +1,6 @@
 from mib import db
 from mib.dao.manager import Manager
-from mib.models import LotteryParticipant
+from mib.models.lottery_participant import LotteryParticipant
 
 
 class LotteryManager(Manager):
