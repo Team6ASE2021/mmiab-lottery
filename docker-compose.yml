@@ -52,25 +52,30 @@ services:
   celery:
     depends_on:
         - redis-celery
+        - redis
         - mib-lottery
         - db
         - migrations
     build: .
     restart: always
+    env_file:
+      - env_file
     environment:
+        - REDIS_HOST=redis
         - POSTGRES_HOST=db
-    command: celery -A mib.background worker --loglevel=info
+        - CELERY_REDIS_HOST=redis-celery
+        - CELERY_REDIS_PORT=6380
+    command: celery -A mib.background  worker -B --loglevel=info
     links:
         -  redis-celery
+        -  redis
   redis:
       image: "redis:alpine"
-      container_name: rd01
       command: --port 6379
       ports:
         - "6379:6379"
   redis-celery:
       image: "redis:alpine"
-      container_name: rd02
       command: --port 6380
       ports:
         - "6380:6380"

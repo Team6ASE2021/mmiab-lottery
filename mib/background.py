@@ -1,4 +1,5 @@
 import logging
+import os
 import random
 
 from celery import Celery
@@ -12,8 +13,12 @@ _APP = None
 
 # BACKEND = "redis://localhost:6379"
 # BROKER = "redis://localhost:6379/0"
-BACKEND = "redis://rd02:6380"
-BROKER = "redis://rd02:6380/0"
+CELERY_REDIS_HOST = os.getenv("CELERY_REDIS_HOST", "localhost")
+CELERY_REDIS_PORT = os.getenv("CELERY_REDIS_PORT", 6379)
+CELERY_REDIS_DB = os.getenv("CELERY_REDIS_DB", 0)
+
+BACKEND = f"redis://{CELERY_REDIS_HOST}:{CELERY_REDIS_PORT}"
+BROKER = f"redis://{CELERY_REDIS_HOST}:{CELERY_REDIS_PORT}/{CELERY_REDIS_DB}"
 celery = Celery(__name__, backend=BACKEND, broker=BROKER)
 
 TaskBase = celery.Task
@@ -27,7 +32,7 @@ class ContextTask(TaskBase):  # pragma: no cover
             from mib import create_app
 
             app = _APP = create_app()
-            _APP.config["USERS_MS_URL"]
+
         else:
             app = _APP
         with app.app_context():
