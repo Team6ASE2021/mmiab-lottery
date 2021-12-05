@@ -76,12 +76,16 @@ def _lottery_draw():
             filter(lambda u: u.choice == winner, participants),
         )
     )
+    if len(winners) > 0:
+        logger.log(logging.INFO, "Adding points to winners...")
+        json = {"users": [{"id": w, "points": 1} for w in winners]}
+        EventPublishers.publish_lottery_winners(json)
+        logger.log(logging.INFO, "Cleaning up lottery participants...")
 
-    logger.log(logging.INFO, "Adding points to winners...")
-    json = {"users": [{"id": w, "points": 1} for w in winners]}
-    EventPublishers.publish_lottery_winners(json)
-    logger.log(logging.INFO, "Cleaning up lottery participants...")
-
-    LotteryManager.reset_lottery()
-    logger.log(logging.INFO, "Table reset done, waiting for next lottery")
-    return json
+        LotteryManager.reset_lottery()
+        logger.log(logging.INFO, "Table reset done, waiting for next lottery")
+        return json
+    else:
+        logger.log(logging.INFO, "No winners, resetting lottery...")
+        LotteryManager.reset_lottery()
+        return None
