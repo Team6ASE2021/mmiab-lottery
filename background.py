@@ -22,6 +22,7 @@ TaskBase = celery.Task
 class ContextTask(TaskBase):  # pragma: no cover
     def __call__(self, *args, **kwargs):
         global _APP
+        global USERS
         # lazy init
         if _APP is None:
             from mib import create_app
