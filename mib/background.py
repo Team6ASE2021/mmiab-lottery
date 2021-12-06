@@ -75,10 +75,26 @@ def _lottery_draw():
             filter(lambda u: u.choice == winner, participants),
         )
     )
+
     if len(winners) > 0:
+        payload = {
+            "notifications": [
+                {
+                    "id_message": None,
+                    "id_user": winner,
+                    "for_recipient": False,
+                    "for_sender": False,
+                    "for_lottery": True,
+                    "from_recipient": None,
+                }
+                for winner in winners
+            ]
+        }
         logger.log(logging.INFO, "Adding points to winners...")
         json = {"users": [{"id": w, "points": 1} for w in winners]}
         EventPublishers.publish_lottery_winners(json)
+        logger.log(logging.INFO, "Sending notifications")
+        EventPublishers.publish_notify_winners(payload)
         logger.log(logging.INFO, "Cleaning up lottery participants...")
 
         LotteryManager.reset_lottery()

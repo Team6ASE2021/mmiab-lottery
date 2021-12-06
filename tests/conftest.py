@@ -3,7 +3,7 @@ import pytest
 
 from mib import create_app
 from mib import db
-from mib.models import LotteryParticipant
+from mib.models.lottery_participant import LotteryParticipant
 
 
 @pytest.fixture(scope="session", autouse=True)
