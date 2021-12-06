@@ -3,7 +3,6 @@ import os
 import random
 
 from celery import Celery
-from celery.schedules import crontab
 from celery.utils.log import get_task_logger
 
 from mib.dao.lottery_manager import LotteryManager
@@ -44,7 +43,7 @@ celery.conf.timezone = "Europe/Rome"
 celery.conf.beat_schedule = {
     "lottery_draw": {
         "task": __name__ + ".lottery_draw",
-        "schedule": crontab(0, 0, day_of_month=1),
+        "schedule": 5,
     },
 }
 
