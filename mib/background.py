@@ -1,7 +1,7 @@
 import logging
 import os
 import random
-
+import config # noqa:F401
 from celery import Celery
 from celery.utils.log import get_task_logger
 
