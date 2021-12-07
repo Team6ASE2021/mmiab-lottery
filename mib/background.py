@@ -1,10 +1,10 @@
-import logging
+
 import os
-import random
+
 import config # noqa:F401
 from celery import Celery
 from celery.utils.log import get_task_logger
-
+from celery.schedules import crontab
 from mib.dao.lottery_manager import LotteryManager
 from mib.events.publishers import EventPublishers
 
@@ -43,7 +43,7 @@ celery.conf.timezone = "Europe/Rome"
 celery.conf.beat_schedule = {
     "lottery_draw": {
         "task": __name__ + ".lottery_draw",
-        "schedule": 5,
+        "schedule": crontab(0, 0, day_of_month=1),
     },
 }
 
