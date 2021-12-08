@@ -32,7 +32,7 @@ def participate():
             jsonify(
                 {
                     "status": "failure",
-                    "message": "A participant with the given email already exists",
+                    "message": "A participant with the given id already exists",
                 }
             ),
             200,

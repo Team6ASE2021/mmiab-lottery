@@ -68,8 +68,8 @@ def create_app():
 
     # creating migrate
     migrate = Migrate(app=app, db=db)
-
-    db.create_all(app=app)
+    if flask_env == "testing" or flask_env == "development":
+        db.create_all(app=app)
 
     # registering to api app all specifications
     register_specifications(api_app)

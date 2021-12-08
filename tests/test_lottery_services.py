@@ -28,7 +28,7 @@ class TestLotteryServices:
         assert resp.status_code == 200
         assert resp.json["status"] == "failure"
         assert (
-            resp.json["message"] == "A participant with the given email already exists"
+            resp.json["message"] == "A participant with the given id already exists"
         )
 
     @pytest.mark.parametrize("bad_choice", [-1, -300, 0, 51, 1000])
