@@ -4,6 +4,10 @@ from mib.models.lottery_participant import LotteryParticipant
 
 
 class LotteryManager(Manager):
+    """
+    Wrapper class  for all db operations involving lottery
+    """
+
     @staticmethod
     def get_participants():
         list = db.session.query(LotteryParticipant).all()
