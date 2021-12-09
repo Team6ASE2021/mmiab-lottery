@@ -27,9 +27,7 @@ class TestLotteryServices:
         resp = test_client.put("/lottery/participate", json=json)
         assert resp.status_code == 200
         assert resp.json["status"] == "failure"
-        assert (
-            resp.json["message"] == "A participant with the given id already exists"
-        )
+        assert resp.json["message"] == "A participant with the given id already exists"
 
     @pytest.mark.parametrize("bad_choice", [-1, -300, 0, 51, 1000])
     def test_participate_bad_choice(self, test_client, mock_ap, bad_choice):

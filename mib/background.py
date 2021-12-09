@@ -1,13 +1,13 @@
-
 import os
 import logging
 import random
-import config # noqa:F401
+import config  # noqa:F401
 from celery import Celery
 from celery.utils.log import get_task_logger
 from celery.schedules import crontab
 from mib.dao.lottery_manager import LotteryManager
 from mib.events.publishers import EventPublishers
+
 _APP = None
 
 # BACKEND = "redis://localhost:6379"
