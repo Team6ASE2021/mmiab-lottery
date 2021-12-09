@@ -2,7 +2,8 @@ from mib import db
 
 
 class LotteryParticipant(db.Model):
-    # Table that stores the participants for the next lottery
+    """Representation of LotteryParticipant model."""
+
     __tablename__ = "lottery_participant"
     SERIALIZE_LIST = ["participant_id", "choice"]
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
